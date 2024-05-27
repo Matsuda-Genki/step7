@@ -4,8 +4,6 @@
 <div class="container">
     <h1 class="mb-4">商品詳細</h1>
 
-    <a href="{{ route('products.index') }}" class="btn btn-primary mb-3">戻る</a>
-
     <dl class="row mt-3">
         <dt class="col-sm-3">商品ID</dt>
         <dd class="col-sm-9">{{ $product->id }}</dd>
@@ -26,9 +24,10 @@
         <dd class="col-sm-9">{{ $product->comment }}</dd>
 
         <dt class="col-sm-3">商品画像</dt>        
-        <dd class="col-sm-9"><img src="{{ asset($product->img_path) }}" width="300"></dd>
+        <dd class="col-sm-9"><img src="{{ asset($product->img_path) }}" height="300"></dd>
     </dl>
-    <a href="{{ route('products.edit', $product) }}" class="btn btn-primary btn-sm mx-1">編集</a>
+    <a href="{{ route('products.edit', $product) }}" class="btn btn-warning mb-3">編集</a>
+    <a href="{{ route('products.index') }}" class="btn btn-primary mb-3">戻る</a>
 
 </div>
 @endsection

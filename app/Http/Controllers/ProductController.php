@@ -11,12 +11,41 @@ use Illuminate\Http\Request;
 class ProductController extends Controller
 {
     // 商品一覧
-    public function index() {
+    public function index(Request $request) {
         // 全ての商品情報取得
-        $products = product::all();
-        
-        // 商品一覧表示
-        return view('products.index', compact('products'));
+        $query = Product::query();
+
+         // 商品名の検索キーワードがある場合、そのキーワードを含む商品をクエリに追加
+        if($search = $request->search){
+            $query->where('product_name', 'LIKE', "%{$search}%");
+        }
+
+        // メーカー名が指定されている場合、その商品をクエリに追加
+        if($company_id = $request->company_id){
+            $query->where('company_id', '=', $company_id);
+        }
+
+        // 最大価格が指定されている場合、その価格以下の商品をクエリに追加
+    if($max_price = $request->max_price){
+        $query->where('price', '<=', $max_price);
+    }
+
+    // 最小在庫数が指定されている場合、その在庫数以上の商品をクエリに追加
+    if($min_stock = $request->min_stock){
+        $query->where('stock', '>=', $min_stock);
+    }
+
+    // 最大在庫数が指定されている場合、その在庫数以下の商品をクエリに追加
+    if($max_stock = $request->max_stock){
+        $query->where('stock', '<=', $max_stock);
+    }
+
+
+        // 上記の条件(クエリ）に基づいて商品を取得し、10件ごとのページネーションを適用
+        $products = $query->paginate(10);
+
+        // 商品一覧ビューを表示し、取得した商品情報をビューに渡す
+        return view('products.index', ['products' => $products]);
     }
 
     // 商品作成
@@ -102,5 +131,12 @@ class ProductController extends Controller
     }
 
     // 商品検索
+    public function search(Request $request){
+    $company = new Company;
+    $companies = $company->getLists();
+
+    // 商品編集画面表示
+    return view('products.index', compact('product', 'companies'));
+    }
 
 }

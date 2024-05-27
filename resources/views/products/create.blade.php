@@ -4,7 +4,7 @@
         <div class="container">
             <h1 class="mb-4">商品新規登録画面</h1>
 
-            <a href="{{ route('products.index') }}" class="btn btn-primary mb-3">戻る</a>
+
 
             <form method="POST" action="{{ route('products.store') }}" enctype="multipart/form-data">
                 @csrf
@@ -17,6 +17,7 @@
                 <div class="mb-3">
                     <label for="company_id" class="form-label">メーカー名*</label>
                     <select class="form-select" id="company_id" name="company_id">
+                            <option value="">未選択</option>
                         @foreach ($companies as $company)
                             <option value="{{ $company -> id }}">{{ $company -> company_name }}</option>
                         @endforeach
@@ -43,7 +44,8 @@
                     <input id="img_path" type="file" name="img_path" class="form-control">
                 </div>
 
-                <button type="submit" class="btn btn-primary">登録</button>
+                <button type="submit" class="btn btn-warning mb-3">新規登録</button>
+                <a href="{{ route('products.index') }}" class="btn btn-primary mb-3">戻る</a>
             </form>
 
         </div>
