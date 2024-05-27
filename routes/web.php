@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,14 +16,22 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    // ログイン済
+    if (Auth::check()) {    
+        return redirect() -> route('products.index');
+
+    // 未ログイン
+    } else {
+        return redirect() -> route('login');
+
+    }
 });
 
-// ログイン画面
-Route::get('/list', [App\Http\Controllers\ArticleController::class, 'showList'])->name('list');
+// 認証画面
+Auth::routes();
 
-// 投稿画面
-Route::get('/regist',[App\Http\Controllers\ArticleController::class, 'showRegistForm'])->name('regist');
+Route::group(['middleware' => 'auth'], function() {
+    Route::resource('products', ProductController::class);
+});
 
-// 投稿用ルート
-Route::post('/regist',[App\Http\Controllers\ArticleController::class, 'registSubmit'])->name('submit');
+

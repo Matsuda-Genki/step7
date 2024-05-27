@@ -51,18 +51,27 @@
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>TITLE</th>
-                        <th>URL</th>
+                        <th>商品画像</th>
+                        <th>商品名</th>
+                        <th>価格</th>
+                        <th>在庫数</th>
+                        <th>メーカー名</th>
                     </tr>
                 </thead>
                 <tbody>
-                @foreach ($articles as $article)
+
+
+
+                @foreach ($companies as $company)
                     <tr>
-                        <td>{{ $article->id }}</td>
-                        <td>{{ $article->title }}</td>
-                        <td>{{ $article->url }}</td>
-                    </tr>
+                        <td>{{ $company->id }}</td>
+                        <td>{{ $company->img_path }}</td>
+                        <td>{{ $company->product_name }}</td>
+                        <td>{{ $company->price }}</td>
+                        <td>{{ $company->stock }}</td>
                 @endforeach
+
+                    </tr>
                 </tbody>
             </table>
         </div>
