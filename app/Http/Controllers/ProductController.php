@@ -114,8 +114,17 @@ class ProductController extends Controller
 
         // 商品情報更新
         $product -> product_name = $request -> product_name;
+        $product -> company_id = $request -> company_id;
         $product -> price = $request -> price;
         $product -> stock = $request -> stock;
+        $product -> comment = $request -> comment;
+
+        // もし画像があるなら保存
+        if ($request -> hasFile('img_path')) {
+            $file_name = $request -> img_path -> getClientOriginalName();
+            $file_path = $request -> img_path -> storeAs('products', $file_name, 'public');
+            $product -> img_path = '/storage/' . $file_path;
+        }
 
         // 更新保存
         $product -> save();

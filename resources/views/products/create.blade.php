@@ -4,18 +4,15 @@
         <div class="container">
             <h1 class="mb-4">商品新規登録画面</h1>
 
-
-
             <form method="POST" action="{{ route('products.store') }}" enctype="multipart/form-data">
                 @csrf
-
                 <div class="mb-3">
-                    <label for="product_name" class="form-label">商品名*</label>
+                    <label for="product_name" class="form-label">商品名<span class="text-danger">*</span></label>
                     <input id="product_name" type="text" name="product_name" class="form-control" required>
                 </div>
 
                 <div class="mb-3">
-                    <label for="company_id" class="form-label">メーカー名*</label>
+                    <label for="company_id" class="form-label">メーカー名<span class="text-danger">*</span></label>
                     <select class="form-select" id="company_id" name="company_id">
                             <option value="">未選択</option>
                         @foreach ($companies as $company)
@@ -25,12 +22,12 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="price" class="form-label">価格*</label>
+                    <label for="price" class="form-label">価格<span class="text-danger">*</span></label>
                     <input id="price" type="number" name="price" class="form-control" required>
                 </div>
 
                 <div class="mb-3">
-                    <label for="stock" class="form-label">在庫数*</label>
+                    <label for="stock" class="form-label">在庫数<span class="text-danger">*</span></label>
                     <input id="stock" type="number" name="stock" class="form-control" required>
                 </div>
 
