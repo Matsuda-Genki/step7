@@ -10,6 +10,9 @@
                         @csrf
                         @method('PUT')
                         <div class="mb-3">
+                            ID: {{ $product -> id }}
+                        </div>
+                        <div class="mb-3">
                             <label for="product_name" class="form-label">商品名<span class="text-danger">*</span></label>
                             <input id="product_name" type="text" name="product_name" class="form-control" value="{{ old('product_name', $product -> product_name) }}" required>
                         </div>

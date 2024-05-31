@@ -23,7 +23,6 @@ Route::get('/', function () {
     // 未ログイン
     } else {
         return redirect() -> route('login');
-
     }
 });
 
@@ -31,5 +30,20 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::group(['middleware' => 'auth'], function() {
-    Route::resource('products', ProductController::class);
+
+    // 一覧画面の表示
+    Route::get('/', [ProductController::class, 'index'])->name('products.index');
+    // 登録画面の表示
+    Route::get('/create', [ProductController::class, 'create'])->name('products.create');
+    // 登録処理
+    Route::post('/store', [ProductController::class, 'store'])->name('products.store');
+    // 商品詳細
+    Route::get('/show/{product}', [ProductController::class, 'show'])->name('products.show');
+    // 編集画面
+    Route::get('/edit/{product}', [ProductController::class, 'edit'])->name('products.edit');
+    // 更新処理
+    Route::post('/update/{product}', [ProductController::class, 'update'])->name('products.update');
+    // 商品削除
+    Route::post('/destroy{product}', [ProductController::class, 'destroy'])->name('products.destroy');
+
 });
