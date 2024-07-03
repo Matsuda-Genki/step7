@@ -59,8 +59,9 @@ class ProductController extends Controller
             $sortOrder = $request->order ?? 'asc';
             if ($sortColumn == 'company_name') {
                 $query->join('companies', 'products.company_id', '=', 'companies.id')
+                ->select('products.*')
 
-                ->orderBy('companies.company_name', $sortOrder);
+                ->orderBy('companies.company_name', $sortOrder)->orderBy('products.id', $sortOrder);
             } else {
                 $query->orderBy($sortColumn, $sortOrder);
             }
