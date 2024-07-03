@@ -12,27 +12,73 @@ use Exception;
 
 class ProductController extends Controller
 {
-    // 商品一覧
-    public function index(Request $request) {
-        // 全ての商品情報取得
-        $query = Product::query();
+    public function index() {
+        // 商品一覧
+        $companies = Company::all();
+        return view('products.index', compact('companies'));
 
-         // 商品名の検索キーワードがある場合、そのキーワードを含む商品をクエリに追加
-        if ($search = $request->search){
-            $query->where('product_name', 'LIKE', "%{$search}%");
+    }
+
+    public function search(Request $request) {
+        // 全ての商品情報取得
+        $query = Product::with('company');
+
+         // 商品名の検索ワードがある場合、そのワードを含む商品をクエリに追加
+        if ($request->filled('product_name')) {
+            $query->where('product_name', 'LIKE', '%' . $request->product_name . '%');
         }
 
         // メーカー名が指定されている場合、その商品をクエリに追加
-        if ($company_id = $request->company_id){
-            $query->where('company_id', '=', $company_id);
-        } else {
-            $products = Product::all(); 
+        if ($request->filled('company_id')) {
+            $query->where('company_id', $request->company_id);
         }
-        // 上記の条件(クエリ）に基づいて商品を取得し、10件ごとのページネーションを適用
-        $products = $query->paginate(10);
 
-        // 商品一覧ビューを表示し、取得した商品情報をビューに渡す
-        return view('products.index', ['products' => $products]);
+        // 最小価格の設定がある場合、その価格以下の商品をクエリに追加
+        if ($request->filled('min_price')) {
+            $query->where('price', '>=', $request->min_price);
+        }
+
+        // 最大価格の設定がある場合、その価格以上の商品をクエリに追加
+        if ($request->filled('max_price')) {
+            $query->where('price', '<=', $request->max_price);
+        }
+
+        // 最小在庫の設定がある場合、その在庫以下の商品をクエリに追加
+        if ($request->filled('min_stock')) {
+            $query->where('stock', '>=', $request->min_stock);
+        }
+
+        // 最大在庫の設定がある場合、その在庫以上の商品をクエリに追加
+        if ($request->filled('max_stock')) {
+            $query->where('stock', '<=', $request->max_stock);
+        }
+
+        // ソートのパラメータが指定されている場合、そのカラムでソートを行う
+        if ($request->filled('sort')) {
+            $sortColumn = $request->sort;
+            $sortOrder = $request->order ?? 'asc';
+            if ($sortColumn == 'company_name') {
+                $query->join('companies', 'products.company_id', '=', 'companies.id')
+
+                ->orderBy('companies.company_name', $sortOrder);
+            } else {
+                $query->orderBy($sortColumn, $sortOrder);
+            }
+        }
+
+        $products = $query->get();
+
+        // 取得した商品情報をjsonで渡す
+        return response()->json($products->map(function($product) {
+            return [
+                'id' => $product->id,
+                'product_name' => $product->product_name,
+                'company' => $product->company,
+                'price' => $product->price,
+                'stock' => $product->stock,
+                'img_path' => $product->img_path
+            ];
+        }));
     }
 
     // 商品作成
@@ -145,25 +191,16 @@ class ProductController extends Controller
     }
 
     // 商品削除
-    public function destroy(Product $product) {
+    public function destroy($id) {
         try {
+            $product = Product::findOrFail($id);
             $product -> delete();
 
-            return redirect('/products');
+            return response()->json(['message' => '商品を削除しました']);
 
         } catch (Exception $e) {
             // エラー内容表示
             Log::debug($e->getMessage());
         }
     }
-
-    // 商品検索
-    public function search(Request $request){
-    $company = new Company;
-    $companies = $company->getLists();
-
-    // 商品編集画面表示
-    return view('products.index', compact('product', 'companies'));
-    }
-
 }

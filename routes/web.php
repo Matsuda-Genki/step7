@@ -33,6 +33,8 @@ Route::group(['middleware' => 'auth'], function() {
 
     // 一覧画面の表示
     Route::get('/', [ProductController::class, 'index'])->name('products.index');
+    // 商品検索
+    Route::post('/search', [ProductController::class, 'search'])->name('products.search');
     // 登録画面の表示
     Route::get('/create', [ProductController::class, 'create'])->name('products.create');
     // 登録処理
@@ -44,6 +46,6 @@ Route::group(['middleware' => 'auth'], function() {
     // 更新処理
     Route::post('/update/{product}', [ProductController::class, 'update'])->name('products.update');
     // 商品削除
-    Route::post('/destroy{product}', [ProductController::class, 'destroy'])->name('products.destroy');
+    Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
 
 });
