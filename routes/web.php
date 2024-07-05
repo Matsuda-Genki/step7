@@ -46,6 +46,6 @@ Route::group(['middleware' => 'auth'], function() {
     // 更新処理
     Route::post('/update/{product}', [ProductController::class, 'update'])->name('products.update');
     // 商品削除
-    Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
+    Route::delete('/products/delete/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
 
 });

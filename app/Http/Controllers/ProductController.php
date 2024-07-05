@@ -127,8 +127,8 @@ class ProductController extends Controller
 
             // データベースに保存
             $product -> save();
-        
-            return redirect('products');
+            $companies = Company::all();
+            return redirect()-> route('products.index');
 
         } catch (Exception $e) {
             // エラー内容表示
@@ -194,7 +194,7 @@ class ProductController extends Controller
     // 商品削除
     public function destroy($id) {
         try {
-            $product = Product::findOrFail($id);
+            $product = Product::find($id);
             $product -> delete();
 
             return response()->json(['message' => '商品を削除しました']);

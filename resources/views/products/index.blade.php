@@ -89,7 +89,7 @@
                             $('#productTable tbody').empty();
 
                             data.forEach(function(product) {
-                                const imgPath = product.img_path ? `${product.img_path}` : `/default-image.jpg`;
+                                const imgPath = product.img_path ? `${product.img_path}` : `/storage/products/default-image.jpg`;
 
                                 $('#productTable tbody').append(
                                     `<tr>
@@ -134,8 +134,9 @@
                     const productId = $(this).data('id');
                     if (confirm('本当に削除しますか？')) {
                         $.ajax({
-                            url: `/products/${productId}`,
-                            method: 'DELETE',
+                            url: `/products/delete/${productId}`,
+                            method: 'POST',
+                            data: { _method: 'DELETE', },
                             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                             success: function(response) {
                                         alert(response.message);
